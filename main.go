@@ -6,14 +6,11 @@ import (
 	"strconv"
 
 	"image/png"
-
-	"github.com/go-chi/chi"
 )
 
 func main() {
-	r := chi.NewRouter()
 
-	r.Get("/*", func(res http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
 		width, errw := strconv.ParseInt(req.URL.Query().Get("width"), 10, 32)
 		if errw != nil {
 			width = 400
@@ -32,13 +29,7 @@ func main() {
 		}
 
 		png.Encode(res, createImage(int(width), int(height), int(maxIterations), float32(zoom)))
-
-		// width := 400
-		// height := 200
-		// maxIterations := 255
-		// zoom := float32(1 / 1.0)
-		// png.Encode(res, createImage(width, height, maxIterations, zoom))
 	})
 
-	log.Fatal(http.ListenAndServe(":3000", r))
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
