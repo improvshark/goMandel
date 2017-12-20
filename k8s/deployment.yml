@@ -1,0 +1,29 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: gomandel
+  labels: {app: gomandel}
+spec:
+  replicas: 1
+  template:
+    metadata: {labels: {app: gomandel}}
+    spec:
+      containers:
+      - name: gomandel
+        image: improvshark/go-mandel
+        command:
+        ports:
+          - containerPort: 3000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gomandel
+spec:
+  type: LoadBalancer
+  selector:
+    app: gomandel
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
